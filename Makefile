@@ -1,6 +1,7 @@
 DOCKER_USERNAME ?= numb3r3
 APPLICATION_NAME ?= nginx
 VERSION_TAG ?= 0.0.1
+GIT_HASH ?= $(shell git log --format="%h" -n 1)
 
 build:
 	docker build --tag ${DOCKER_USERNAME}/${APPLICATION_NAME}:${VERSION_TAG} --tag ${DOCKER_USERNAME}/${APPLICATION_NAME}:latest .
