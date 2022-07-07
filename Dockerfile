@@ -61,7 +61,6 @@ RUN cd /tmp && wget https://github.com/openresty/lua-resty-core/archive/refs/tag
     cd /tmp && wget https://github.com/openresty/lua-resty-lock/archive/refs/tags/v0.08.tar.gz && \
     tar -zxvf v0.08.tar.gz && cd lua-resty-lock-0.08/ && make install PREFIX=/opt/bitnami/nginx
 
-RUN echo "..."
 
 # COPY lua/ /opt/bitnami/nginx/conf/lua
 COPY nginx.conf /opt/bitnami/nginx/conf/nginx.conf
