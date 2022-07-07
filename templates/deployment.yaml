@@ -35,7 +35,10 @@ spec:
         {{- end }}
       {{- end }}
     spec:
+      {{/*
+      ## The following brokes the upgrade process
       {{- include "nginx.imagePullSecrets" . | nindent 6 }}
+      */}}
       shareProcessNamespace: {{ .Values.sidecarSingleProcessNamespace }}
       serviceAccountName: {{ template "nginx.serviceAccountName" . }}
       {{- if .Values.hostAliases }}
