@@ -41,6 +41,14 @@ spec:
       nodePort: {{ .Values.service.nodePorts.https }}
       {{- end }}
     {{- end }}
+    {{- if .Values.containerPorts.grpcs }}
+    - name: grpcs
+      port: {{ .Values.service.grpcsPort }}
+      targetPort: {{ .Values.service.targetPort.grpcs }}
+      {{- if and (or (eq .Values.service.type "NodePort") (eq .Values.service.type "LoadBalancer")) (not (empty .Values.service.nodePorts.grpcs)) }}
+      nodePort: {{ .Values.service.nodePorts.grpcs }}
+      {{- end }}
+    {{- end }}
     {{- if .Values.metrics.enabled }}
     - name: metrics
       port: {{ .Values.metrics.service.port }}

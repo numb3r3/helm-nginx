@@ -6,10 +6,11 @@ FROM bitnami/nginx:${BITNAMI_NGINX_TAG} AS builder
 USER root
 ## Redeclare NGINX_VERSION so it can be used as a parameter inside this build stage
 ARG NGINX_VERSION
+
 ## Install required packages and build dependencies
 RUN install_packages dirmngr gpg gpg-agent curl build-essential libpcre3-dev zlib1g-dev libperl-dev wget build-essential libssl-dev libaio-dev openssl unzip libreadline-dev
 ## Add trusted NGINX PGP key for tarball integrity verification
-RUN gpg --keyserver pgp.mit.edu --recv-key 520A9993A1C052F8
+RUN gpg --keyserver keyserver.ubuntu.com --recv-key 520A9993A1C052F8
 ## Download luajit, lua nginx module and compile
 RUN cd /tmp && wget https://github.com/openresty/luajit2/archive/refs/tags/v2.1-20220310.tar.gz && \
     tar -zxvf v2.1-20220310.tar.gz && cd luajit2-2.1-20220310 && make install && \
@@ -60,14 +61,16 @@ RUN cd /tmp && wget https://github.com/openresty/lua-resty-core/archive/refs/tag
     cd /tmp && wget https://github.com/openresty/lua-resty-lock/archive/refs/tags/v0.08.tar.gz && \
     tar -zxvf v0.08.tar.gz && cd lua-resty-lock-0.08/ && make install PREFIX=/opt/bitnami/nginx
 
+RUN echo "..."
 
-COPY lua/ /opt/bitnami/nginx/conf/lua
+# COPY lua/ /opt/bitnami/nginx/conf/lua
 COPY nginx.conf /opt/bitnami/nginx/conf/nginx.conf
-COPY default-fake-certificate.pem /opt/bitnami/nginx/ssl/default-fake-certificate.pem
+COPY conf.d /opt/bitnami/nginx/conf/conf.d
+COPY cas_certs /opt/bitnami/nginx/conf/ssl/cas
 
-## Enable module
-RUN echo "load_module modules/ngx_http_perl_module.so;" | cat - /opt/bitnami/nginx/conf/nginx.conf > /tmp/nginx.conf && \
-    cp /tmp/nginx.conf /opt/bitnami/nginx/conf/nginx.conf
+### Enable module
+#RUN echo "load_module modules/ngx_http_perl_module.so;" | cat - /opt/bitnami/nginx/conf/nginx.conf > /tmp/nginx.conf && \
+#    cp /tmp/nginx.conf /opt/bitnami/nginx/conf/nginx.conf
 
 RUN rm -rf /tmp/* && mkdir /opt/bitnami/nginx/tmp && mkdir /var/log/nginx && chown -R 1001:1001 /opt/bitnami/nginx && chown -R 1001:1001 /var/log/nginx
 

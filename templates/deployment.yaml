@@ -170,6 +170,10 @@ spec:
             - name: https
               containerPort: {{ .Values.containerPorts.https }}
             {{- end }}
+            {{- if .Values.containerPorts.grpcs }}
+            - name: grpcs
+              containerPort: {{ .Values.containerPorts.grpcs }}
+            {{- end }}
           {{- if .Values.livenessProbe.enabled }}
           livenessProbe:
             tcpSocket:
